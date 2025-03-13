@@ -1,83 +1,87 @@
-# MCP Server Template
+# MCP JS Server Template
 
-This folder contains a template for creating new Model Context Protocol (MCP) servers for Claude. The template provides a basic structure that you can build upon for custom integrations.
+## Overview
 
-## What's Included
+This is a simplified template for creating Model Context Protocol (MCP) servers in JavaScript for integration with Claude Desktop. It provides a basic structure for developing custom MCP servers with minimal boilerplate code.
 
-- `template-mcp-server.js`: A basic MCP server template with:
-  - Basic tools: `about` and `hello`
-  - Basic resource: `server-info`
-  - All required protocol handlers (initialize, tools/list, resources/list, etc.)
-  - Error handling and logging
+## Features
 
-## How to Use This Template
+- Implements standard MCP server initialization
+- Provides two basic tools: `about` and `hello`
+- Follows MCP protocol version 2024-11-05
+- Uses `@modelcontextprotocol/sdk` for server implementation
+- Includes error handling and logging
 
-1. Copy the template to your project folder:
-   ```bash
-   cp template-mcp-server.js ../YourProjectName/your-server-name.js
-   ```
+## Prerequisites
 
-2. Modify the configuration variables:
-   ```javascript
-   const SERVER_NAME = "your-server-name";
-   const SERVER_VERSION = "1.0.0";
-   ```
+- Node.js (v16 or later)
+- Claude Desktop
+- `@modelcontextprotocol/sdk` npm package
 
-3. Add your custom tools by:
-   - Adding them to the capabilities object
-   - Adding tool definitions to the `tools/list` handler
-   - Implementing handlers in the `tools/call` section
+## Installation
 
-4. Add your custom resources by:
-   - Adding them to the capabilities object
-   - Adding resource definitions to the `resources/list` handler
-   - Implementing handlers for each resource
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install @modelcontextprotocol/sdk
+```
 
-5. Configure Claude Desktop to use your MCP server:
-   - Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Add your server to the `mcpServers` section
-   - Restart Claude Desktop
+## Claude Desktop Configuration
 
-## Example Claude Desktop Configuration
+Add to your Claude Desktop configuration file:
 
+**Location:**
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+**Configuration Example:**
 ```json
 {
   "mcpServers": {
-    "your-server-name": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/sdk", "stdin-stdout-server", "/Users/ryaker/Documents/LocalDev/MCP/Projects/YourProjectName/your-server-name.js"]
+    "template-server": {
+      "command": "node",
+      "args": [
+        "/full/path/to/simplified-template-mcp-server.js"
+      ],
+      "env": {
+        "NODE_OPTIONS": "--no-deprecation"
+      }
     }
   }
 }
 ```
 
-## Types of MCP Components
+## Available Tools
 
-An MCP server can expose:
+### 1. `about`
+Returns information about the MCP server.
 
-1. **Tools**: Functions that Claude can call to perform actions (like sending emails, creating tasks, etc.)
-2. **Resources**: Data sources that Claude can query (like document repositories, user profiles, settings, etc.)
+### 2. `hello`
+Provides a greeting, with an optional name parameter.
 
-## MCP Protocol Handlers
+**Example Usage in Claude:**
+```
+hello with name="Claude"
+```
 
-The template implements these essential protocol handlers:
+## Extending the Template
 
-- `initialize`: Establishes the connection and negotiates capabilities
-- `tools/list`: Provides tool definitions to Claude
-- `tools/call`: Executes tools when requested by Claude
-- `resources/list`: Provides resource definitions to Claude
-- `resources/{name}`: Retrieves resources when requested by Claude
-- `shutdown`: Gracefully terminates the server
+To create your own MCP server:
+1. Copy this template
+2. Modify the `TOOLS` array
+3. Implement custom tool handlers in `server.fallbackRequestHandler`
+4. Update server name and version
 
-## Development Workflow
+## Limitations
 
-1. Start with the template
-2. Add custom functionality incrementally
-3. Test each addition by restarting Claude Desktop
-4. Ask Claude to use your tools or access your resources
+- Minimal error handling
+- No advanced security features
+- Meant as a starting point for custom implementations
 
-## Dependencies
+## Contributing
 
-This template requires:
-- Node.js
-- `@modelcontextprotocol/sdk` package
+Contributions are welcome! Please submit pull requests or open issues.
+
+## License
+
+MIT License
